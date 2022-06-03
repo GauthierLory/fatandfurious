@@ -40,7 +40,9 @@ class _FilmInfoState extends State<FilmInfo> {
   @override
   void initState() {
     super.initState();
-    futureFilms = fetchFilm();
+    if (films.isEmpty) {
+      futureFilms = fetchFilm();
+    }
   }
 
   @override
@@ -63,7 +65,7 @@ class _FilmInfoState extends State<FilmInfo> {
                           child: Column(
                             children: [
                               ListTile(
-                                leading: Icon(Icons.place),
+                                leading: const Icon(Icons.video_collection),
                                 title: Text(info.title),
                                 subtitle: Text(info.summary
                                     .replaceAll("<p>", "")
@@ -79,11 +81,11 @@ class _FilmInfoState extends State<FilmInfo> {
                     ],
                   );
                 } else if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
+                  return Center(child: Text('${snapshot.error}'));
                 }
 
                 // By default, show a loading spinner.
-                return const CircularProgressIndicator();
+                return const Center(child: CircularProgressIndicator());
               },
             )
           ],
