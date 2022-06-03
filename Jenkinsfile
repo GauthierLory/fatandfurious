@@ -16,6 +16,7 @@ pipeline {
   stage('deploy') {
     steps {
         echo 'deploy'
+        sh 'php -S localhost:8888'
     }
   }
  }
