@@ -21,10 +21,7 @@ curl_close($curl);
 
 $movies = json_decode($response);
 
-foreach ($movies as $movie) {
 
-    echo $movie->show->name . "<br>";
-}
 
 function search(string $needed, array $data): array
 {
@@ -43,32 +40,43 @@ function search(string $needed, array $data): array
 <input type="text" id="textValue">
 <input type="button" value="Valider" id="validButton">
 
-<p class="validSearch"></p>
+<div id="result"></div>
 
+<?php
+
+foreach ($movies as $movie) {
+
+    echo $movie->show->name . "<br>";
+}
+
+?>
 
 
 <script type="text/javascript">
 
-window.addEventListener('load', function() {
-    console.log('All assets are loaded')
-
-    document.getElementById('validButton').addEventListener('click', function() {
-        let value = document.getElementById('textValue').value
-
-        fetch('https://api.tvmaze.com/search/shows?q=' + value)
-        .then(function(response) {
-            console.log(response);
-            // (response.body).for(element => {
-            // });
-            for (const [key, value] of Object.entries(response.body)) {
-                console.log(`${key}: ${value}`);
-                console.log('toto')
-                // console.log(element.show.name)
-            }
+    window.addEventListener('load', function() {
+        search()
+        document.getElementById('validButton').addEventListener('click', function() {
+            search()
         })
-        
     })
 
-})
-
+    function search() {
+        let value = document.getElementById('textValue').value
+        value = value != "" ? value : "Fast"
+                fetch('https://api.tvmaze.com/search/shows?q=' + value)
+                .then(function(response) {
+                    document.getElementById('result').innerHTML = ""
+                    response.json().then(
+                        result => {
+                            result.forEach(element => {
+                                console.log(element)
+                                let container = document.createElement("p")
+                                container.innerHTML = element.show.name
+                                document.getElementById('result').appendChild(container)  
+                            });
+                        }
+                    );
+                })
+    }
 </script>
